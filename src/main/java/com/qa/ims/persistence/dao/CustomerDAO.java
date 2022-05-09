@@ -75,7 +75,7 @@ public class CustomerDAO implements Dao<Customer> {
 			statement.setString(2, customer.getSurname());
 			statement.executeUpdate();
 			return readLatest();
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
