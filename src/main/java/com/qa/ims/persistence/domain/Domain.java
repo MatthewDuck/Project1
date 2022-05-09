@@ -40,5 +40,4 @@ public enum Domain {
 		}
 		return domain;
 	}
-
 }
