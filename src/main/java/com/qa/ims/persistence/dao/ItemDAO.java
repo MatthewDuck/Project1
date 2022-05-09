@@ -21,7 +21,7 @@ public class ItemDAO implements Dao<Item> {
 	@Override
 	public Item modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long id = resultSet.getLong("id");
-		String itemName = resultSet.getString("itemName");
+		String itemName = resultSet.getString("item_name");
 		Double price = resultSet.getDouble("price");
 		return new Item(id, itemName, price);
 
@@ -43,11 +43,24 @@ public class ItemDAO implements Dao<Item> {
 		}
 		return new ArrayList<>();
 	}
+	
+	public Item readLatest() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM items ORDER BY id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
 
 	@Override
 	public Item read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id=?)");) {
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id=?");) {
 			statement.setLong(1, id);
 			try (ResultSet resultSet = statement.executeQuery();) {
 				resultSet.next();
@@ -65,10 +78,11 @@ public class ItemDAO implements Dao<Item> {
 	public Item create(Item item) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO items(itemName, price) VALUES (?, ?)");) {
+						.prepareStatement("INSERT INTO items(item_name, price) VALUES (?, ?)");) {
 			statement.setString(1, item.getItemName());
 			statement.setDouble(2, item.getPrice());
 			statement.execute();
+			return readLatest();
 
 		} catch (Exception e) {
 			LOGGER.debug(e);
@@ -82,7 +96,7 @@ public class ItemDAO implements Dao<Item> {
 	public Item update(Item item) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("UPDATE items SET itemName=?, price=?, WHERE id=?");) {
+						.prepareStatement("UPDATE items SET item_name=?, price=? WHERE id=?");) {
 			statement.setString(1, item.getItemName());
 			statement.setDouble(2, item.getPrice());
 			statement.setLong(3, item.getId());
