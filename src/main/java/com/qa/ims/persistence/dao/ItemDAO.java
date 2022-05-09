@@ -13,16 +13,16 @@ import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.utils.DBUtils;
 
 public class ItemDAO implements Dao<Item> {
-	
+
 	public static final Logger LOGGER = LogManager.getLogger();
-	
+
 	@Override
 	public Item modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long id = resultSet.getLong("id");
 		String itemName = resultSet.getString("itemName");
 		Double price = resultSet.getDouble("price");
 		return new Item(id, itemName, price);
-		
+
 	}
 
 	@Override
@@ -33,29 +33,52 @@ public class ItemDAO implements Dao<Item> {
 
 	@Override
 	public Item read(Long id) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM items WHERE id=?)");) {
+			statement.setLong(1, id);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				resultSet.next();
+				return modelFromResultSet(resultSet);
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
+
 	}
 
 	@Override
 	public Item create(Item item) {
-		try(Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO items(itemName, price) VALUES (?, ?)");){
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO items(itemName, price) VALUES (?, ?)");) {
 			statement.setString(1, item.getItemName());
 			statement.setDouble(2, item.getPrice());
 			statement.execute();
-					
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Item update(Item item) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("UPDATE items SET itemName=?, price=?, WHERE id=?");) {
+			statement.setString(1, item.getItemName());
+			statement.setDouble(2, item.getPrice());
+			statement.setLong(3, item.getId());
+			statement.execute();
+			return read(item.getId());
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
