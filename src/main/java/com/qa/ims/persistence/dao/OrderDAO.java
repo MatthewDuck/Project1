@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.domain.Order;
+import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.utils.DBUtils;
 
 public class OrderDAO implements Dao<Order> {
@@ -27,6 +28,19 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders ORDER BY id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Order readLatestItem() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM order_items ORDER BY id DESC LIMIT 1");) {
 			resultSet.next();
 			return modelFromResultSet(resultSet);
 		} catch (Exception e) {
@@ -55,11 +69,41 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public Order update(Order t) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Order addItem(Order order, Item item) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO order_items (item_id, order_id) VALUES (?, ?)");) {
+			statement.setLong(1,  item.getId());
+			statement.setLong(2, order.getId());
+			statement.executeUpdate();
+			return readLatestItem();
+		}catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	public int removeItem(Order order, Item item) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("DELETE FROM order_items  WHERE item_id = ? AND order_id = ?)");) {
+			statement.setLong(1,  item.getId());
+			statement.setLong(2, order.getId());
+			return statement.executeUpdate();
+		}catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return 0;
+		
 	}
 
 	@Override
@@ -73,5 +117,7 @@ public class OrderDAO implements Dao<Order> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }
