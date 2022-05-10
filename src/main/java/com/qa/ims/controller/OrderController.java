@@ -26,8 +26,11 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public List<Order> readAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Order> orders = orderDAO.readAll();
+		for (Order order : orders) {
+			LOGGER.info(order);
+		}
+		return orders;
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Would you like to a)add or b)remove an item from an order");
 		String choice = utils.getString();
 		switch (choice) {
-		case "a":	
+		case "a":
 			items.add(itemDAO.read(itemId));
 			LOGGER.info("Order Updated");
 			break;
@@ -62,7 +65,7 @@ public class OrderController implements CrudController<Order> {
 		Order order = orderDAO.update(new Order(orderId, items));
 		return order;
 	}
-	
+
 	public void addItem() {
 		ItemDAO itemDAO = new ItemDAO();
 		LOGGER.info("Please enter an Order ID to edit");
@@ -71,7 +74,7 @@ public class OrderController implements CrudController<Order> {
 		Long itemId = utils.getLong();
 		orderDAO.addItem(orderDAO.read(orderId), itemDAO.read(itemId));
 	}
-	
+
 	public void deleteItem() {
 		ItemDAO itemDAO = new ItemDAO();
 		LOGGER.info("Please enter an Order ID to edit");
@@ -83,8 +86,15 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public int delete() {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.info("Please enter the id of the order you would like to delete");
+		Long id = utils.getLong();
+		return orderDAO.delete(id);
+	}
+	
+	public Double costOrder() {
+		LOGGER.info("Please enter the id of the order you would like to calculate the total cost of");
+		Long id = utils.getLong();
+		return orderDAO.costOrder(id);
 	}
 
 }

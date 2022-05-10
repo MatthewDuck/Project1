@@ -43,6 +43,19 @@ public class ItemDAO implements Dao<Item> {
 		}
 		return new ArrayList<>();
 	}
+	
+	public Item readLatest() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM items ORDER BY id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
 
 	@Override
 	public Item read(Long id) {
@@ -69,6 +82,7 @@ public class ItemDAO implements Dao<Item> {
 			statement.setString(1, item.getItemName());
 			statement.setDouble(2, item.getPrice());
 			statement.execute();
+			return readLatest();
 
 		} catch (Exception e) {
 			LOGGER.debug(e);
