@@ -89,7 +89,7 @@ public class OrderDAOTest {
 
 	@Test
 	public void testDelete() {
-		assertEquals(4, DAO.delete(1));
+		assertEquals(1, DAO.delete(1));
 
 	}
 
