@@ -17,6 +17,9 @@ public class Item {
 		this.price = price;
 	}
 
+	public Item() {
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -91,7 +94,5 @@ public class Item {
 		}
 		return true;
 	}
-	
-	
 
 }

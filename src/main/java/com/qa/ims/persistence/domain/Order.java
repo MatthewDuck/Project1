@@ -1,13 +1,10 @@
 package com.qa.ims.persistence.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Order {
 
 	private Long id;
 	private Long customerId;
-	private List<Item> items = new ArrayList<Item>();
+	private Item items;
 
 	public Order(Long id, Long customerId) {
 		this.id = id;
@@ -18,7 +15,7 @@ public class Order {
 		this.customerId = customerId;
 	}
 
-	public Order(Long id, List<Item> items) {
+	public Order(Long id, Item items) {
 		this.id = id;
 		this.items = items;
 	}
@@ -39,9 +36,19 @@ public class Order {
 		this.customerId = customerId;
 	}
 
+	public Item getItems() {
+		return items;
+	}
+
+	public void setItems(Item items) {
+		this.items = items;
+	}
+
+	
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", customerId=" + customerId + "]";
+		return "Order [id=" + id + ", customerId=" + customerId + ", items=" + items + "]";
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class Order {
 		int result = 1;
 		result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		return result;
 	}
 
@@ -79,14 +87,20 @@ public class Order {
 		} else if (!id.equals(other.id)) {
 			return false;
 		}
+		if (items == null) {
+			if (other.items != null) {
+				return false;
+			}
+		} else if (!items.equals(other.items)) {
+			return false;
+		}
 		return true;
 	}
+	
+	
 
-	public List<Item> getItems() {
-		return items;
-	}
 
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
+
+
+
 }

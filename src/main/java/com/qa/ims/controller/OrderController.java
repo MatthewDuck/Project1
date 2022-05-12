@@ -1,14 +1,11 @@
 package com.qa.ims.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.qa.ims.persistence.dao.ItemDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
-import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
@@ -44,44 +41,45 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public Order update() {
-		ItemDAO itemDAO = new ItemDAO();
+
 		LOGGER.info("Please enter an Order ID to edit");
 		Long orderId = utils.getLong();
-		LOGGER.info("Please enter an Item ID");
-		Long itemId = utils.getLong();
-		List<Item> items = new ArrayList<>();
-		LOGGER.info("Would you like to a)add or b)remove an item from an order");
+		LOGGER.info("How would you like to update the order");
+		LOGGER.info("Add Item");
+		LOGGER.info("Delete Item");
+		LOGGER.info("Check Cost");
+		LOGGER.info("Change Customer ID");
 		String choice = utils.getString();
 		switch (choice) {
-		case "a":
-			items.add(itemDAO.read(itemId));
-			LOGGER.info("Order Updated");
+		case "Change Customer ID":
+			LOGGER.info("Please enter a new Customer ID");
+			Long customerId = utils.getLong();
+			Order order = orderDAO.update(new Order(orderId, customerId));
+			return order;
+		case "Add Item":
+			LOGGER.info("Please enter an Item ID");
+			Long addId = utils.getLong();
+			Order add = orderDAO.addItem(orderId, addId);
+			return add;
+		case "Delete Item":
+			LOGGER.info("Please enter an Item ID");
+			Long removeId = utils.getLong();
+			deleteItem(orderId, removeId);
 			break;
-		case "b":
-			items.remove(itemDAO.read(itemId));
-			LOGGER.info("Order Updated");
+		case "Check Cost":
+			costOrder(orderId);
 			break;
+		default:
+			LOGGER.info("Incorrect Input");
+			choice = utils.getString();
 		}
-		Order order = orderDAO.update(new Order(orderId, items));
-		return order;
+		return null;
+
 	}
 
-	public void addItem() {
-		ItemDAO itemDAO = new ItemDAO();
-		LOGGER.info("Please enter an Order ID to edit");
-		Long orderId = utils.getLong();
-		LOGGER.info("Please enter an Item ID");
-		Long itemId = utils.getLong();
-		orderDAO.addItem(orderDAO.read(orderId), itemDAO.read(itemId));
-	}
 
-	public void deleteItem() {
-		ItemDAO itemDAO = new ItemDAO();
-		LOGGER.info("Please enter an Order ID to edit");
-		Long orderId = utils.getLong();
-		LOGGER.info("Please enter an Item ID");
-		Long itemId = utils.getLong();
-		orderDAO.removeItem(orderDAO.read(orderId), itemDAO.read(itemId));
+	public int deleteItem(Long orderId, Long removeId) {
+		return orderDAO.removeItem(orderId, removeId);
 	}
 
 	@Override
@@ -90,11 +88,9 @@ public class OrderController implements CrudController<Order> {
 		Long id = utils.getLong();
 		return orderDAO.delete(id);
 	}
-	
-	public Double costOrder() {
-		LOGGER.info("Please enter the id of the order you would like to calculate the total cost of");
-		Long id = utils.getLong();
-		return orderDAO.costOrder(id);
+
+	public Double costOrder(Long orderId) {
+		return orderDAO.costOrder(orderId);
 	}
 
 }
