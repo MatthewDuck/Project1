@@ -1,7 +1,7 @@
 Coverage: 80.4%
 # Project Title
 
-One Paragraph of project description goes here
+Program to manage customer, orders, items and their relationships. Uses java and SQL databases.
 
 ## Getting Started
 
@@ -9,11 +9,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Requires Java and MYSQL unless using the fatjar which includes all dependencies and only requires Java.
 
-```
-Give examples
-```
 
 ### Installing
 
@@ -75,6 +72,7 @@ We use [SemVer](http://semver.org/) for versioning.
 ## Authors
 
 * **Chris Perrins** - *Initial work* - [christophperrins](https://github.com/christophperrins)
+* **Matthew Duck** - *Further Implementation*
 
 ## License
 
@@ -84,6 +82,5 @@ This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Hat tip to anyone Chris Perrins for the initial work and Pawel Stypulkowski for helping me on a few issues that I got stuck on.*
+* Jira Link:https://matthewdduck.atlassian.net/jira/software/projects/P1/boards/2/roadmap*
