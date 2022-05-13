@@ -10,6 +10,7 @@ Simply run the fatjar file or clone the repository into your own repo and run th
 ### Prerequisites
 
 Requires Java and MYSQL unless using the fatjar which includes all dependencies and only requires Java.
+As well as Maven and JUnit for testing.
 
 
 ## Running the tests
