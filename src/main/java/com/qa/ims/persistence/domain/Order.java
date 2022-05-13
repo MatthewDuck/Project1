@@ -20,6 +20,12 @@ public class Order {
 		this.items = items;
 	}
 
+	public Order(Long id, Long customerId, Item item) {
+		this.id = id;
+		this.customerId = customerId;
+		this.items = item;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -48,8 +54,15 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", customerId=" + customerId + ", items=" + items + "]";
+		if(items != null) {
+			return "Order [id=" + id + ", customerId=" + customerId + ", items=" + items + "]";
+		}else {
+			return "Order [id=" + id + ", customerId=" + customerId + "]";
+		}
+		
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
