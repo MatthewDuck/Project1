@@ -32,34 +32,13 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
+Each class has its own set of tests, with each type of class having a different type of test.
+Domains have a single simple test to check they contains a toString and hashCode method.
+Controllers have tests to check every method works and interacts properly with its correcponding method in the DAO. They do use using Mockito to get around generating Objects. 
+DAOs have test to check that each method and interacts with SQL correctly. These tests will need to be changed if more data is put into the tables using the test sqldata file.
 
-### Unit Tests 
 
-Explain what these tests test, why and how to run them
 
-```
-Give an example
-```
-
-### Integration Tests 
-Explain what these tests test, why and how to run them
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
